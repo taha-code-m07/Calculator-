@@ -1,0 +1,86 @@
+package com.example.calculator; // نام پکیج را مطابق پروژه خودت تغییر بده
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private EditText etNum1, etNum2;
+    private TextView tvResult;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etNum1 = findViewById(R.id.etNum1);
+        etNum2 = findViewById(R.id.etNum2);
+        tvResult = findViewById(R.id.tvResult);
+
+        Button btnDivide = findViewById(R.id.btnDivide);
+        Button btnPlus = findViewById(R.id.btnPlus);
+        Button btnMinus = findViewById(R.id.btnMinus);
+        Button btnMultiply = findViewById(R.id.btnMultiply);
+
+        btnPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { calculate('+'); }
+        });
+        btnMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { calculate('-'); }
+        });
+        btnMultiply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { calculate('*'); }
+        });
+        btnDivide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { calculate('/'); }
+        });
+    }
+
+    private void calculate(char op) {
+        String s1 = etNum1.getText().toString().trim();
+        String s2 = etNum2.getText().toString().trim();
+
+        if (s1.isEmpty() || s2.isEmpty()) {
+            tvResult.setText("لطفاً هر دو عدد را وارد کنید");
+            return;
+        }
+
+        double a, b;
+        try {
+            a = Double.parseDouble(s1);
+            b = Double.parseDouble(s2);
+        } catch (NumberFormatException e) {
+            tvResult.setText("ورودی نامعتبر است");
+            return;
+        }
+
+        double result;
+        switch (op) {
+            case '+': result = a + b; break;
+            case '-': result = a - b; break;
+            case '*': result = a * b; break;
+            default:
+                if (b == 0) {
+                    tvResult.setText("تقسیم بر صفر ممکن نیست");
+                    return;
+                }
+                result = a / b;
+        }
+
+        // اگر جواب عدد صحیح بود، بدون اعشار نمایش بده
+        if (result == (long) result) {
+            tvResult.setText("جواب: " + (long) result);
+        } else {
+            tvResult.setText("جواب: " + result);
+        }
+    }
+}
